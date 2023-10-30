@@ -4,7 +4,7 @@
 
 WONDERFUL_TOOLCHAIN ?= /opt/wonderful
 TARGET ?= gba/rom
-include $(WONDERFUL_TOOLCHAIN)/target/$(TARGET)/makedefs.mk
+include $(WF_TARGET_DIR)/makedefs.mk
 
 # Source code paths
 # -----------------
