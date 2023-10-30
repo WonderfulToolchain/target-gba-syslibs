@@ -35,6 +35,39 @@
             &__load_start_ ## TYPE ## _ ## NAME ); \
     }
 
+/**
+ * @brief Load a given IWRAM code overlay from ROM to IWRAM.
+ *
+ * IWRAM overlays can be used to switch the code present in IWRAM depending on
+ * the program's needs at a given time.
+ *
+ * To define IWRAM overlays, one should define an [overlays] section in
+ * the project's wfconfig.toml file, listing every desired IWRAM overlay layout
+ * (that is, which overlays can be simultaneously loaded at a given moment)
+ * like so:
+ *
+ * [overlays]
+ * iwram = [
+ *   ["math", "cutscene"],
+ *   ["math", "gameplay"]
+ * ]
+ * 
+ * This will allow using the overlay "math" like so:
+ *
+ * __attribute__((noinline, section(".iwram_math")))
+ * int math_function(void) {
+ *   return 2 + 2; 
+ * }
+ *
+ * // user code
+ * gba_overlay_load_iwram(math);
+ * int result = math_function();
+ *
+ * In the configuration above, the IWRAM overlays "math" and "cutscene" can
+ * be loaded at the same time, or "math" and "gameplay". However, using the
+ * overlays "gameplay" and "cutscene" at the same time is prohibited, unless
+ * the user were to add a ["cutscene", "gameplay"] combination to the list.
+ */
 #define gba_overlay_load_iwram(NAME) gba_overlay_load(iwram, NAME)
 
 #endif /* __WF_LIBGBA_OVERLAY_H__ */
