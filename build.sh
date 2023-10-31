@@ -23,4 +23,4 @@ for i in gba/rom gba/multiboot; do
 	build_library libgba $i
 done
 
-build_library libgbafs gba/rom
+build_library libgbafat gba/rom
