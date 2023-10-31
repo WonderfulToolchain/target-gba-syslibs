@@ -22,3 +22,5 @@ build_library () {
 for i in gba/rom gba/multiboot; do
 	build_library libgba $i
 done
+
+build_library libgbafs gba/rom

@@ -28,7 +28,7 @@ LIBDIRS		:= $(WF_ARCH_LIBDIRS)
 # Build artifacts
 # ---------------
 
-NAME		:= gba
+NAME		:= gbafs
 BUILDDIR	:= build/$(TARGET)
 ARCHIVE		:= $(BUILDDIR)/lib$(NAME).a
 
@@ -108,9 +108,9 @@ doc:
 
 install: all
 	@echo "  INSTALL $(ARCHIVE)"
-	$(_V)$(MKDIR) -p $(WF_TARGET_DIR)/lib
-	$(_V)$(CP) -ar include $(WF_TARGET_DIR)
-	$(_V)$(CP) -ar $(ARCHIVE) $(WF_TARGET_DIR)/lib
+	$(_V)$(MKDIR) -p $(WONDERFUL_TOOLCHAIN)/target/gba/lib
+	$(_V)$(CP) -ar include $(WONDERFUL_TOOLCHAIN)/target/gba
+	$(_V)$(CP) -ar $(ARCHIVE) $(WONDERFUL_TOOLCHAIN)/target/gba/lib
 
 # TODO: Write install stage.
 
