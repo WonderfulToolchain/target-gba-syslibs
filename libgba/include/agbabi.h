@@ -84,6 +84,91 @@ void __agbabi_lwordset4(void* dest, size_t n, long long c) __attribute__((nonnul
  */
 void __agbabi_wordset4(void* dest, size_t n, int c) __attribute__((nonnull(1)));
 
+/**
+ * Empty IRQ handler that acknowledges raised IRQs
+ */
+void __agbabi_irq_empty(void) __attribute__((error("IRQ handler should not be directly called")));
+
+/**
+ * Nested IRQ handler that calls __agbabi_irq_user_fn with the raised IRQ flags
+ */
+void __agbabi_irq_user(void) __attribute__((error("IRQ handler should not be directly called")));
+
+/**
+ * Handler called by __agbabi_irq_user
+ * @param irqFlags 16-bit mask of the raised flags
+ */
+extern void(*__agbabi_irq_user_fn)(int irqFlags);
+
+/**
+ * Coroutine state
+ * @param arm_sp Pointer to coroutine stack
+ * @param joined Flag if the coroutine has joined
+ */
+typedef struct {
+    unsigned int arm_sp : 31;
+    unsigned int joined : 1;
+} __agbabi_coro_t;
+
+/**
+ * Initializes a coro struct to call a given coroutine
+ * @param coro pointer to coro struct to initialize
+ * @param sp_top the TOP of the stack for this coroutine (stack grows down!)
+ * @param coproc procedure to call as a coroutine
+ */
+void __agbabi_coro_make(__agbabi_coro_t* __restrict__ coro, void* __restrict__ sp_top, int(*coproc)(__agbabi_coro_t*)) __attribute__((nonnull(1, 2, 3)));
+
+/**
+ * Starts/resumes a given coroutine
+ * @param coro coroutine to start/resume
+ * @return integer value from coroutine
+ */
+int __agbabi_coro_resume(__agbabi_coro_t* coro) __attribute__((nonnull(1)));
+
+/**
+ * Yields a given value of a coroutine back to the caller
+ * @param coro coroutine that is yielding
+ * @param value returned to caller
+ */
+void __agbabi_coro_yield(__agbabi_coro_t* coro, int value) __attribute__((nonnull(1)));
+
+/**
+ * Multiboot parameters
+ * All callbacks must return 0 to continue, or non-zero to cancel
+ * @param header Pointer to 192 bytes of header data
+ * @param begin Pointer to start of Multiboot ROM data
+ * @param end Pointer to end of Multiboot ROM data
+ * @param palette 8-bit index of Multiboot animation
+ * @param clients_connected Callback with a mask of which clients are connected
+ * @param clients_connected Callback with a mask of which clients are connected
+ * @param palette_progress Mask of which clients are waiting to receive palette data
+ * @param accept Callback to confirm sending Multiboot ROM
+ */
+typedef struct {
+    const void* header;
+    const void* begin;
+    const void* end;
+    int palette;
+    int(*clients_connected)(int mask);
+    int(*header_progress)(int prog);
+    int(*palette_progress)(int mask);
+    int(*accept)(void);
+} __agbabi_multiboot_t;
+
+/**
+ * Send Multiboot data over serial IO
+ * IRQs must first be disabled
+ * @param param Pointer to __agbabi_multiboot_t
+ * @return 0 on success, 1 on failure with errno set to the error code
+ */
+int __agbabi_multiboot(const __agbabi_multiboot_t* param) __attribute__((nonnull(1)));
+
+/**
+ * Check EWRAM speed
+ * @return 0 for slow WRAM (OXY, NTR), 1 for fast EWRAM (AGB, AGS)
+ */
+int __agbabi_poll_ewram(void) __attribute__((const));
+
 #ifdef __cplusplus
 }
 #endif
