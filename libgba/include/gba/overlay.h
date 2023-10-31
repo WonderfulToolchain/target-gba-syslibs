@@ -23,6 +23,8 @@
 #ifndef __WF_LIBGBA_OVERLAY_H__
 #define __WF_LIBGBA_OVERLAY_H__
 
+#include <aeabi.h>
+
 #define gba_overlay_load(TYPE, NAME) \
     { \
         extern char __load_addr_ ## TYPE ## _ ## NAME ; \
@@ -46,17 +48,17 @@
  * (that is, which overlays can be simultaneously loaded at a given moment)
  * like so:
  *
- * [overlays]
+ * [memory.overlay]
  * iwram = [
  *   ["math", "cutscene"],
  *   ["math", "gameplay"]
  * ]
- * 
+ *
  * This will allow using the overlay "math" like so:
  *
  * __attribute__((noinline, section(".iwram_math")))
  * int math_function(void) {
- *   return 2 + 2; 
+ *   return 2 + 2;
  * }
  *
  * // user code
@@ -69,5 +71,12 @@
  * the user were to add a ["cutscene", "gameplay"] combination to the list.
  */
 #define gba_overlay_load_iwram(NAME) gba_overlay_load(iwram, NAME)
+
+/**
+ * @brief Load a given EWRAM code overlay from ROM to EWRAM.
+ *
+ * @see gba_overlay_load_iwram
+ */
+#define gba_overlay_load_ewram(NAME) gba_overlay_load(ewram, NAME)
 
 #endif /* __WF_LIBGBA_OVERLAY_H__ */

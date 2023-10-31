@@ -85,6 +85,7 @@ SECTIONS
     {
         *(SORT(.iwram.sorted.*))
         *(.iwram .iwram.*)
+        *(.sdata .sdata.*)
         /* Pad section only if there's content, per LD docs
            Prevents empty sections from taking up ROM space/showing up in objdump */
         . = ALIGN(. != 0 ? 4 : 1);
@@ -121,14 +122,13 @@ SECTIONS
     .bss.iwram (NOLOAD) : ALIGN(4)
     {
         *(.iwram_bss .iwram_bss.*)
+        *(.sbss .sbss.*)
         . = ALIGN(. != 0 ? 4 : 1);
     } >IWRAM
 
     .bss.ewram (NOLOAD) : ALIGN(4)
     {
         *(.ewram_bss .ewram_bss.*)
-        /* devkitARM compatibility */
-        *(.sbss .sbss.*)
         . = ALIGN(. != 0 ? 4 : 1);
     } >EWRAM
 
