@@ -57,7 +57,9 @@ _header:
     .zero   28
     b       _start          @ JOYBUS entry point
 #else
-    .zero   4
+    @ Fake multiboot entry point - infinite loop
+    @ Required to pass mGBA's multiboot auto-detect
+    b       .
 #endif
 
 #ifdef MULTIBOOT
