@@ -118,7 +118,9 @@ _cpuset:
     .word       __vram_bss_vma
     .word       __vram_bss_dma
 _zero:
-    .word       0, 0, 0
+    @ To match a full _cpuset array entry, this should be three words.
+    @ However, we only care about the value of the first word if it is 0.
+    .word       0 @, 0, 0
 _start:
     @ IRQs off
     ldr         r0, =REG_IME
@@ -145,7 +147,7 @@ _start:
     bne         1b
 
     @ Start
-    bl		__libc_init_array
+    bl          __libc_init_array
     bl          main
     @ Do not call __libc_fini_array, as we're not returning to system anyway.
 _exit:
