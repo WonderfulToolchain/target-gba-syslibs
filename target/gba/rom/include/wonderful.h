@@ -23,7 +23,9 @@
 #ifndef __WF_WONDERFUL_H__
 #define __WF_WONDERFUL_H__
 
+#ifndef __WONDERFUL__
 #define __WONDERFUL__
+#endif
 #define __WONDERFUL_GBA__
 
 #endif /* __WF_WONDERFUL_H__ */
