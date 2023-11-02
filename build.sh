@@ -7,7 +7,7 @@ fi
 mkdir build
 cp -aRv target build/
 cd crts
-make
+make WF_TARGET_DIR=../build/target/gba/rom
 DESTDIR=../build make install
 cd ..
 

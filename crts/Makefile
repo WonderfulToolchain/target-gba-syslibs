@@ -1,4 +1,5 @@
-WONDERFUL_TOOLCHAIN ?= /opt/wonderful
+export WONDERFUL_TOOLCHAIN ?= /opt/wonderful
+WF_TARGET ?= gba/rom
 include ../target/gba/makedefs-common.mk
 
 OBJDIR := build
@@ -8,9 +9,9 @@ MKDIRS := $(OBJDIR)
 OBJECTS := \
 	$(OBJDIR)/crt0_rom.o \
 	$(OBJDIR)/crt0_multiboot.o
-CFLAGS := $(WF_ARCH_CFLAGS)
-ASFLAGS := -x assembler-with-cpp $(WF_ARCH_CFLAGS)
-LDFLAGS := $(WF_ARCH_LDFLAGS)
+CFLAGS := -mcpu=arm7tdmi -mtune=arm7tdmi -ffreestanding
+ASFLAGS := -x assembler-with-cpp
+LDFLAGS :=
 
 DESTDIR ?= $(WF)
 

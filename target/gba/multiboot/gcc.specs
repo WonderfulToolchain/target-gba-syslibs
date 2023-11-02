@@ -1,0 +1,13 @@
+%rename cpp old_cpp
+*cpp:
+-I%:getenv(WONDERFUL_TOOLCHAIN /target/gba/multiboot/include) -I%:getenv(WONDERFUL_TOOLCHAIN /target/gba/include) -I%:getenv(WONDERFUL_TOOLCHAIN /toolchain/gcc-arm-none-eabi/arm-none-eabi/gba/include) -D__WONDERFUL__ %(old_cpp)
+
+*cc1_cpu:
+-mcpu=arm7tdmi -mtune=arm7tdmi
+
+%rename link old_link
+*link:
+-L%:getenv(WONDERFUL_TOOLCHAIN /target/gba/multiboot/lib) -L%:getenv(WONDERFUL_TOOLCHAIN /target/gba/lib) -L%:getenv(WONDERFUL_TOOLCHAIN /toolchain/gcc-arm-none-eabi/arm-none-eabi/gba/lib) %(old_link)
+
+*startfile:
+%{Ofast|ffast-math|funsafe-math-optimizations:%{!shared:crtfastmath.o%s}} crti%O%s crtbegin%O%s crt0%O%s

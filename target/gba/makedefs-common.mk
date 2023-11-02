@@ -14,12 +14,9 @@ RM := rm -rf
 GBAFIX := $(WF)/bin/wf-gbatool fix
 ROMLINK := $(WF)/bin/wf-gbatool link $(WF_SUBTARGET)
 
-WF_EXTLIB_DIR := $(WF)/target/gba/external
+WF_EXTLIB_DIR := $(WF)/target/$(WF_TARGET)/external
 
-WF_ARCH_CFLAGS := -mcpu=arm7tdmi -mtune=arm7tdmi -ffreestanding
+WF_ARCH_CFLAGS := -specs=$(WF)/target/$(WF_TARGET)/$(WF_SUBTARGET)/gcc.specs
 WF_ARCH_ASFLAGS :=
-WF_ARCH_LDFLAGS :=
-WF_ARCH_LIBDIRS := \
-	$(WF)/target/$(WF_TARGET)/$(WF_SUBTARGET) \
-	$(WF)/target/$(WF_TARGET) \
-	$(WF)/toolchain/gcc-arm-none-eabi/arm-none-eabi/$(WF_TARGET)
+WF_ARCH_LDFLAGS := -specs=$(WF)/target/$(WF_TARGET)/$(WF_SUBTARGET)/gcc.specs
+WF_ARCH_LIBDIRS :=

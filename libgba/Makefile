@@ -23,7 +23,7 @@ DEFINES		:=
 # ---------
 
 LIBS		:= -lc
-LIBDIRS		:= $(WF_ARCH_LIBDIRS)
+LIBDIRS		:= $(WF_TARGET_DIR) $(WF_TARGET_DIR)/.. $(WONDERFUL_TOOLCHAIN)/toolchain/gcc-arm-none-eabi/arm-none-eabi/gba
 
 # Build artifacts
 # ---------------
@@ -61,10 +61,10 @@ INCLUDEFLAGS	:= $(foreach path,$(INCLUDEDIRS),-I$(path)) \
 
 LIBDIRSFLAGS	:= $(foreach path,$(LIBDIRS),-L$(path)/lib)
 
-ASFLAGS		+= -x assembler-with-cpp $(DEFINES) $(WF_ARCH_CFLAGS) \
+ASFLAGS		+= -x assembler-with-cpp $(DEFINES) \
 		   $(INCLUDEFLAGS) -ffunction-sections -fdata-sections
 
-CFLAGS		+= -std=gnu2x $(WARNFLAGS) $(DEFINES) $(WF_ARCH_CFLAGS) \
+CFLAGS		+= -std=gnu2x $(WARNFLAGS) $(DEFINES) \
 		   $(INCLUDEFLAGS) -ffunction-sections -fdata-sections -O2 \
 		   -flto -ffat-lto-objects
 
