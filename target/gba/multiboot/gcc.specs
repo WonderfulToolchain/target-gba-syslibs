@@ -10,4 +10,6 @@
 -L%:getenv(WONDERFUL_TOOLCHAIN /target/gba/multiboot/lib) -L%:getenv(WONDERFUL_TOOLCHAIN /target/gba/lib) -L%:getenv(WONDERFUL_TOOLCHAIN /toolchain/gcc-arm-none-eabi/arm-none-eabi/gba/lib) %(old_link)
 
 *startfile:
-%{Ofast|ffast-math|funsafe-math-optimizations:%{!shared:crtfastmath.o%s}} crti%O%s crtbegin%O%s %:getenv(WONDERFUL_TOOLCHAIN /target/gba/multiboot/lib/crt0%O)
+%:getenv(WONDERFUL_TOOLCHAIN /target/gba/multiboot/lib/crt0%O)
+
+%rename endfile old_endfile
