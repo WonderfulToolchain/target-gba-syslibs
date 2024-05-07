@@ -18,7 +18,7 @@
 #define REGISTER_ARGS 4
 
 #undef errno
-extern int errno;
+extern _Thread_local int errno;
 
 typedef struct {
     const ucontext_t* next[8];

@@ -23,7 +23,7 @@ DEFINES		:=
 # ---------
 
 LIBS		:= -lc
-LIBDIRS		:= $(WF_TARGET_DIR) $(WF_TARGET_DIR)/.. $(WONDERFUL_TOOLCHAIN)/toolchain/gcc-arm-none-eabi/arm-none-eabi/gba
+LIBDIRS		:= $(WF_TARGET_DIR) $(WF_TARGET_DIR)/..
 
 # Build artifacts
 # ---------------

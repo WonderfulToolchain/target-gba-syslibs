@@ -163,4 +163,14 @@ _trap:
 .global         _start, _start_rom, _exit
 .weak           _exit
 
+    @ Implement a simple, single-threaded __aeabi_read_tp.
+    @ Mark it as weak so it can be overridden.
+.section        .text.__aeabi_read_tp,"ax",%progbits
+.global         __aeabi_read_tp
+.type           __aeabi_read_tp, %function
+.weak           __aeabi_read_tp
+__aeabi_read_tp:
+    ldr		r0, =__tls_base
+    bx          lr
+
 @ vim: ft=armv4 et sta sw=4 sts=8

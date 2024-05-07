@@ -111,6 +111,19 @@ SECTIONS
         . = ALIGN(. != 0 ? 4 : 1);
     } >DATA AT>ROM :DATA
 
+    .tdata : ALIGN(4)
+    {
+        *(.tdata .tdata.* .gnu.linkonce.td.*)
+        . = ALIGN(. != 0 ? 4 : 1);
+    } >DATA AT>ROM :DATA
+
+    .tbss (NOLOAD) : ALIGN(4)
+    {
+        *(.tbss .tbss.* .gnu.linkonce.tb.*)
+        *(.tcommon)
+        . = ALIGN(. != 0 ? 4 : 1);
+    } >DATA AT>ROM :DATA
+
     .bss (NOLOAD) : ALIGN(4)
     {
         *(.dynbss)
@@ -166,10 +179,12 @@ SECTIONS
 
     __data_lma = LOADADDR(.data);
     __data_vma = ADDR(.data);
-    __data_dma = 0x84000000 | SIZEOF(.data) >> 2;
+    __data_dma = 0x84000000 | (SIZEOF(.data) + SIZEOF(.tdata)) >> 2;
 
-    __bss_vma = ADDR(.bss);
-    __bss_dma = 0x85000000 | SIZEOF(.bss) >> 2;
+    __bss_vma = ADDR(.tbss);
+    __bss_dma = 0x85000000 | (SIZEOF(.tbss) + SIZEOF(.bss)) >> 2;
+
+    __tls_base = ADDR(.tdata);
 
     __iwram_bss_vma = ADDR(.bss.iwram);
     __iwram_bss_dma = 0x85000000 | SIZEOF(.bss.iwram) >> 2;
