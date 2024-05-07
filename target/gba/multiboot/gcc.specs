@@ -1,3 +1,5 @@
+%include <picolibc.specs>
+
 %rename cpp old_cpp
 *cpp:
 -I%:getenv(WONDERFUL_TOOLCHAIN /target/gba/multiboot/include) -I%:getenv(WONDERFUL_TOOLCHAIN /target/gba/include) -D__WONDERFUL__ %(old_cpp)
