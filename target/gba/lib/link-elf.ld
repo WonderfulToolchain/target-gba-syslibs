@@ -167,33 +167,33 @@ SECTIONS
 
     __iwram_lma = LOADADDR(.iwram);
     __iwram_vma = ADDR(.iwram);
-    __iwram_dma = 0x84000000 | SIZEOF(.iwram) >> 2;
+    __iwram_dma = 0x04000000 | SIZEOF(.iwram) >> 2;
 
     __ewram_lma = LOADADDR(.ewram);
     __ewram_vma = ADDR(.ewram);
-    __ewram_dma = 0x84000000 | SIZEOF(.ewram) >> 2;
+    __ewram_dma = 0x04000000 | SIZEOF(.ewram) >> 2;
 
     __vram_lma = LOADADDR(.vram);
     __vram_vma = ADDR(.vram);
-    __vram_dma = 0x84000000 | SIZEOF(.vram) >> 2;
+    __vram_dma = 0x04000000 | SIZEOF(.vram) >> 2;
 
     __data_lma = LOADADDR(.data);
     __data_vma = ADDR(.data);
-    __data_dma = 0x84000000 | (SIZEOF(.data) + SIZEOF(.tdata)) >> 2;
+    __data_dma = 0x04000000 | (SIZEOF(.data) + SIZEOF(.tdata)) >> 2;
 
     __bss_vma = ADDR(.tbss);
-    __bss_dma = 0x85000000 | (SIZEOF(.tbss) + SIZEOF(.bss)) >> 2;
+    __bss_dma = 0x05000000 | (SIZEOF(.tbss) + SIZEOF(.bss)) >> 2;
 
     __tls_base = ADDR(.tdata);
 
     __iwram_bss_vma = ADDR(.bss.iwram);
-    __iwram_bss_dma = 0x85000000 | SIZEOF(.bss.iwram) >> 2;
+    __iwram_bss_dma = 0x05000000 | SIZEOF(.bss.iwram) >> 2;
 
     __ewram_bss_vma = ADDR(.bss.ewram);
-    __ewram_bss_dma = 0x85000000 | SIZEOF(.bss.ewram) >> 2;
+    __ewram_bss_dma = 0x05000000 | SIZEOF(.bss.ewram) >> 2;
 
     __vram_bss_vma = ADDR(.bss.vram);
-    __vram_bss_dma = 0x85000000 | SIZEOF(.bss.vram) >> 2;
+    __vram_bss_dma = 0x05000000 | SIZEOF(.bss.vram) >> 2;
 
     /* Stabs debugging sections.  */
     .stab          0 : { *(.stab) }
