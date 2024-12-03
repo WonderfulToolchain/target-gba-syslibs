@@ -12,6 +12,7 @@
 
 #include <errno.h>
 #include <stdarg.h>
+#include <stdint.h>
 #include <unistd.h>
 #include <sys/ucontext.h>
 
