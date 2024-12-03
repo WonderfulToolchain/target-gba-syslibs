@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 
-#include <sys/signal.h>
+#include <signal.h>
 
 typedef struct {
     unsigned int reg_r0;
