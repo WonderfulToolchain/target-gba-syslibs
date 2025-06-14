@@ -1,3 +1,6 @@
 [submodule "vendor/fatfs"]
 	path = libgbafat/fatfs
 	url = http://github.com/WonderfulToolchain/wf-fatfs
+[submodule "hardware-definitions"]
+	path = hardware-definitions
+	url = https://github.com/WonderfulToolchain/hardware-definitions

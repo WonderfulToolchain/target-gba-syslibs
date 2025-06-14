@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+cp hardware-definitions/dist/c/gba/mmio.h libgba/include/gba/
+
 if [ -d build ]; then
 	rm -r build
 fi
