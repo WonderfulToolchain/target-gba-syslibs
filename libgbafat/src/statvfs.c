@@ -9,11 +9,14 @@
 #include <sys/statvfs.h>
 #include <sys/unistd.h>
 
-#include "fatfs/ff.h"
+#include "../fatfs/source/ff.h"
+#include "../fatfs/source/diskio.h"
 #include "fatfs_internal.h"
 
 static void _statvfs_populate(FATFS *fs, DWORD nclst, struct statvfs *buf)
 {
+    uint8_t status = disk_status(fs->pdrv);
+
 #if FF_MAX_SS != FF_MIN_SS
     buf->f_bsize = fs->csize * fs->ssize;
 #else
@@ -27,7 +30,7 @@ static void _statvfs_populate(FATFS *fs, DWORD nclst, struct statvfs *buf)
     buf->f_ffree = 0;
     buf->f_favail = 0;
     buf->f_fsid = fs->fs_type;
-    buf->f_flag = 0;
+    buf->f_flag = (FF_FS_READONLY || (status & STA_PROTECT)) ? ST_RDONLY : 0;
     buf->f_namemax = fs->fs_type >= FS_FAT32 ? 255 : 12;
 }
 
