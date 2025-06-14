@@ -20,11 +20,15 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef __WF_LIBGBA_GBA_H__
-#define __WF_LIBGBA_GBA_H__
+#ifndef LIBGBA_GBA_H_
+#define LIBGBA_GBA_H_
 
 #include <wonderful.h>
+#include <gba/mmio.h>
+
+#ifndef __ASSEMBLER__
 #include <aeabi.h>
 #include <agbabi.h>
+#endif
 
-#endif /* __WF_LIBGBA_GBA_H__ */
+#endif /* LIBGBA_GBA_H_ */
