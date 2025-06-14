@@ -10,8 +10,8 @@ include $(WF_TARGET_DIR)/makedefs.mk
 # Source code paths
 # -----------------
 
-INCLUDEDIRS	:= include
-SOURCEDIRS	:= src
+INCLUDEDIRS	:= include src/fatfs
+SOURCEDIRS	:= fatfs/source src
 ASSETDIRS	:= assets
 
 # Defines passed to all files

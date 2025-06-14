@@ -1,16 +1,18 @@
 // SPDX-License-Identifier: Zlib
 //
-// Copyright (c) 2023 Adrian "asie" Siekierka
+// Copyright (C) 2023 Adrian "asie" Siekierka
 
-#ifndef _SYS_STATVFS_H
-#define _SYS_STATVFS_H
-#if defined( __cplusplus )
+#ifndef SYS_STATVFS_H__
+#define SYS_STATVFS_H__
+
+#ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <sys/types.h>
 
-struct statvfs {
+struct statvfs
+{
     unsigned long f_bsize;
     unsigned long f_frsize;
     fsblkcnt_t f_blocks;
@@ -27,10 +29,11 @@ struct statvfs {
 #define ST_RDONLY 0x1
 #define ST_NOSUID 0x2
 
-int statvfs(const char * __restrict__ path, struct statvfs * __restrict__ buf);
+int statvfs(const char *__restrict__ path, struct statvfs *__restrict__ buf);
 int fstatvfs(int fd, struct statvfs *buf);
 
-#if defined( __cplusplus )
-} // extern "C"
+#ifdef __cplusplus
+}
 #endif
-#endif // define _SYS_STATVFS_H
+
+#endif // SYS_STATVFS_H__

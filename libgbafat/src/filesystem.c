@@ -13,7 +13,7 @@
 #include <sys/unistd.h>
 #include <time.h>
 
-#include "fatfs/ff.h"
+#include "../fatfs/source/ff.h"
 #include "fatfs_internal.h"
 
 // This file implements stubs for system calls. For more information about it,
@@ -24,6 +24,12 @@
 
 int open(const char *path, int flags, ...)
 {
+    if (path == NULL)
+    {
+        errno = EINVAL;
+        return -1;
+    }
+
     // POSIX | FatFs
     // ------+----------------------------------------
     // "r"   | FA_READ
@@ -103,7 +109,7 @@ int open(const char *path, int flags, ...)
         mode |= FA_OPEN_EXISTING; // r
     }
 
-    FIL *fp = calloc(sizeof(FIL), 1);
+    FIL *fp = calloc(1, sizeof(FIL));
     if (fp == NULL)
     {
         errno = ENOMEM;
@@ -242,6 +248,12 @@ int rmdir(const char *name)
 
 int stat(const char *path, struct stat *st)
 {
+    if (path == NULL || st == NULL)
+    {
+        errno = EINVAL;
+        return -1;
+    }
+
     FILINFO fno = { 0 };
     FRESULT result = f_stat(path, &fno);
 
@@ -251,6 +263,8 @@ int stat(const char *path, struct stat *st)
         return -1;
     }
 
+    st->st_dev = fno.fpdrv;
+    st->st_ino = fno.fclust;
     st->st_size = fno.fsize;
 
 #if FF_MAX_SS != FF_MIN_SS
@@ -287,12 +301,20 @@ int stat(const char *path, struct stat *st)
 
 int fstat(int fd, struct stat *st)
 {
+    if (st == NULL)
+    {
+        errno = EINVAL;
+        return -1;
+    }
+
     // This isn't handled here
     if ((fd >= STDIN_FILENO) && (fd <= STDERR_FILENO))
         return -1;
 
     FIL *fp = (FIL *)fd;
 
+    st->st_dev = fp->obj.fs->pdrv;
+    st->st_ino = fp->obj.sclust;
     st->st_size = fp->obj.objsize;
 
 #if FF_MAX_SS != FF_MIN_SS
@@ -553,6 +575,12 @@ int fchownat(int dir_fd, const char *path, uid_t owner, gid_t group, int flags)
 
 int access(const char *path, int amode)
 {
+    if (path == NULL)
+    {
+        errno = EINVAL;
+        return -1;
+    }
+
     FILINFO fno = { 0 };
     FRESULT result = f_stat(path, &fno);
     if (result != FR_OK)

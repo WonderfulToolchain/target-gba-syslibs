@@ -5,8 +5,11 @@
 #ifndef FATFS_INTERNAL_H__
 #define FATFS_INTERNAL_H__
 
-#include "fatfs/ff.h"
+#include <stdint.h>
+#include <sys/time.h>
+#include "../fatfs/source/ff.h"
 
 int fatfs_error_to_posix(FRESULT error);
+uint32_t fatfs_timestamp_to_fattime(struct tm *stm);
 
 #endif // FATFS_INTERNAL_H__

@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: Zlib
 //
-// Copyright (c) 2023 Antonio Niño Díaz
+// Copyright (C) 2023 Antonio Niño Díaz
 
 #include <errno.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,25 +14,26 @@
 // unmodified so that updating it is easier, so this is a hack to rename it just
 // in this compilation unit.
 #define DIR DIRff
-#include "fatfs/ff.h"
+#include "../fatfs/source/ff.h"
 #include "fatfs_internal.h"
 #undef DIR
 
 // Include "dirent.h" after the FatFs inclusion hack.
 #include <dirent.h>
 
-#define INDEX_NO_ENTRY  -1
+#define INDEX_NO_ENTRY          -1
+#define INDEX_END_OF_DIRECTORY  -2
 
-static DIR *alloc_dir(void)
+static DIR *alloc_dir(size_t len)
 {
-    DIRff *dp = calloc(sizeof(DIRff), 1);
+    void *dp = calloc(1, len);
     if (dp == NULL)
     {
         errno = ENOMEM;
         return NULL;
     }
 
-    DIR *dirp = calloc(sizeof(DIR), 1);
+    DIR *dirp = calloc(1, sizeof(DIR));
     if (dirp == NULL)
     {
         free(dp);
@@ -51,22 +53,21 @@ static void free_dir(DIR *dirp)
 
 DIR *opendir(const char *name)
 {
-    DIR *dirp = alloc_dir();
+    DIR *dirp = alloc_dir(sizeof(DIRff));
     if (dirp == NULL)
     {
         // errno setting is handled by alloc_dir()
         return NULL;
     }
-    DIRff *dp = dirp->dp;
-
     dirp->index = INDEX_NO_ENTRY;
 
+    DIRff *dp = dirp->dp;
     FRESULT result = f_opendir(dp, name);
     if (result == FR_OK)
         return dirp;
 
-    free_dir(dirp);
     errno = fatfs_error_to_posix(result);
+    free_dir(dirp);
     return NULL;
 }
 
@@ -78,9 +79,9 @@ int closedir(DIR *dirp)
         return -1;
     }
 
+    FRESULT result = FR_OK;
     DIRff *dp = dirp->dp;
-
-    FRESULT result = f_closedir(dp);
+    result = f_closedir(dp);
 
     free_dir(dirp);
 
@@ -93,16 +94,23 @@ int closedir(DIR *dirp)
 
 struct dirent *readdir(DIR *dirp)
 {
-    DIRff *dp = dirp->dp;
-    struct dirent *ent = &(dirp->dirent);
-
-    memset(ent, 0, sizeof(struct dirent));
-
     if (dirp == NULL)
     {
         errno = EBADF;
         return NULL;
     }
+
+    if (dirp->index <= INDEX_END_OF_DIRECTORY)
+    {
+        errno = EINVAL;
+        return NULL;
+    }
+
+    struct dirent *ent = &(dirp->dirent);
+    memset(ent, 0, sizeof(struct dirent));
+    ent->d_reclen = sizeof(struct dirent);
+
+    DIRff *dp = dirp->dp;
 
     FILINFO fno = { 0 };
     FRESULT result = f_readdir(dp, &fno);
@@ -115,12 +123,14 @@ struct dirent *readdir(DIR *dirp)
     if (fno.fname[0] == '\0')
     {
         // End of directory reached
-        dirp->index = INDEX_NO_ENTRY;
+        dirp->index = INDEX_END_OF_DIRECTORY;
+        errno = 0;
         return NULL;
     }
 
     dirp->index++;
     ent->d_off = dirp->index;
+    ent->d_ino = fno.fclust;
 
     strncpy(ent->d_name, fno.fname, sizeof(ent->d_name));
     ent->d_name[sizeof(ent->d_name) - 1] = '\0';
@@ -129,8 +139,6 @@ struct dirent *readdir(DIR *dirp)
         ent->d_type = DT_DIR; // Directory
     else
         ent->d_type = DT_REG; // Regular file
-
-    ent->d_reclen = sizeof(struct dirent);
 
     return ent;
 }
@@ -142,6 +150,7 @@ void rewinddir(DIR *dirp)
 
     DIRff *dp = dirp->dp;
     (void)f_rewinddir(dp); // Ignore returned value
+    dirp->index = INDEX_NO_ENTRY;
 }
 
 void seekdir(DIR *dirp, long loc)
@@ -149,7 +158,7 @@ void seekdir(DIR *dirp, long loc)
     if (dirp == NULL)
         return;
 
-    if (dirp->index == INDEX_NO_ENTRY) // If we're at the end or the beginning
+    if (dirp->index <= INDEX_END_OF_DIRECTORY) // If we're at the end
         rewinddir(dirp);
     else if (loc < dirp->index) // If we have already passed this entry
         rewinddir(dirp);
@@ -168,7 +177,7 @@ void seekdir(DIR *dirp, long loc)
         }
 
         // Check if we reached the end of the directory without finding it
-        if (dirp->index == INDEX_NO_ENTRY)
+        if (dirp->index == INDEX_END_OF_DIRECTORY)
         {
             rewinddir(dirp);
             break;
