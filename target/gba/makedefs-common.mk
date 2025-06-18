@@ -1,6 +1,7 @@
 WF := $(WONDERFUL_TOOLCHAIN)
 CC := $(WF)/toolchain/gcc-arm-none-eabi/bin/arm-none-eabi-gcc
-AR := $(WF)/toolchain/gcc-arm-none-eabi/bin/arm-none-eabi-ar
+CXX := $(WF)/toolchain/gcc-arm-none-eabi/bin/arm-none-eabi-g++
+AR := $(WF)/toolchain/gcc-arm-none-eabi/bin/arm-none-eabi-gcc-ar
 AS := $(WF)/toolchain/gcc-arm-none-eabi/bin/arm-none-eabi-as
 LD := $(WF)/toolchain/gcc-arm-none-eabi/bin/arm-none-eabi-ld
 NM := $(WF)/toolchain/gcc-arm-none-eabi/bin/arm-none-eabi-nm
