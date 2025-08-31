@@ -20,6 +20,10 @@ PHDRS
     IWRAM PT_LOAD FLAGS(7);
     EWRAM PT_LOAD FLAGS(7);
     VRAM PT_LOAD FLAGS(7);
+    BSS PT_LOAD FLAGS(6);
+    BSS_IWRAM PT_LOAD FLAGS(6);
+    BSS_EWRAM PT_LOAD FLAGS(6);
+    BSS_VRAM PT_LOAD FLAGS(6);
 }
 
 SECTIONS
@@ -129,31 +133,31 @@ SECTIONS
         *(.bss .bss.* .gnu.linkonce.b.*)
         *(COMMON)
         . = ALIGN(. != 0 ? 4 : 1);
-    } >BSS :NONE
+    } >BSS :BSS
 
     .bss.iwram (NOLOAD) : ALIGN(4)
     {
         *(.iwram_bss .iwram_bss.*)
         *(.sbss .sbss.*)
         . = ALIGN(. != 0 ? 4 : 1);
-    } >IWRAM
+    } >IWRAM :BSS_IWRAM
 
     .bss.ewram (NOLOAD) : ALIGN(4)
     {
         *(.ewram_bss .ewram_bss.*)
         . = ALIGN(. != 0 ? 4 : 1);
-    } >EWRAM
+    } >EWRAM :BSS_EWRAM
 
     .bss.vram (NOLOAD) : ALIGN(4)
     {
         *(.vram_bss .vram_bss.*)
         . = ALIGN(. != 0 ? 4 : 1);
-    } >VRAM
+    } >VRAM :BSS_VRAM
 
     .noinit (NOLOAD) :
     {
         *(.noinit .noinit.* .gnu.linkonce.n.*)
-    } >NOINIT
+    } >NOINIT :NONE
 
     .pad :
     {
