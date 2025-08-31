@@ -22,7 +22,7 @@ vpath %.S $(SRCDIRS)
 
 all: $(OBJECTS)
 
-$(OBJDIR)/crt0_multiboot.o: crt0.S $(OBJDIR)
+$(OBJDIR)/crt0_multiboot.o: crt0_agbpack.S $(OBJDIR)
 	$(CC) $(ASFLAGS) -DMULTIBOOT -c -o $@ $<
 
 $(OBJDIR)/crt0_rom.o: crt0.S $(OBJDIR)

@@ -88,40 +88,40 @@ SECTIONS
         /* Pad section only if there's content, per LD docs
            Prevents empty sections from taking up ROM space/showing up in objdump */
         . = ALIGN(. != 0 ? 4 : 1);
-    } >IWRAM AT>ROM :IWRAM
+    } >IWRAM AT>IWRAM_LOAD :IWRAM
 
     .ewram : ALIGN(4)
     {
         *(SORT(.ewram.sorted.*))
         *(.ewram .ewram.*)
         . = ALIGN(. != 0 ? 4 : 1);
-    } >EWRAM AT>ROM :EWRAM
+    } >EWRAM AT>EWRAM_LOAD :EWRAM
 
     .vram : ALIGN(4)
     {
         *(SORT(.vram.sorted.*))
         *(.vram .vram.*)
         . = ALIGN(. != 0 ? 4 : 1);
-    } >VRAM AT>ROM :VRAM
+    } >VRAM AT>VRAM_LOAD :VRAM
 
     .data : ALIGN(4)
     {
         *(.data .data.* .gnu.linkonce.d.*)
         . = ALIGN(. != 0 ? 4 : 1);
-    } >DATA AT>ROM :DATA
+    } >DATA AT>DATA_LOAD :DATA
 
     .tdata : ALIGN(4)
     {
         *(.tdata .tdata.* .gnu.linkonce.td.*)
         . = ALIGN(. != 0 ? 4 : 1);
-    } >DATA AT>ROM :DATA
+    } >DATA AT>DATA_LOAD :DATA
 
     .tbss (NOLOAD) : ALIGN(4)
     {
         *(.tbss .tbss.* .gnu.linkonce.tb.*)
         *(.tcommon)
         . = ALIGN(. != 0 ? 4 : 1);
-    } >DATA AT>ROM :DATA
+    } >DATA AT>DATA_LOAD :DATA
 
     .bss (NOLOAD) : ALIGN(4)
     {
