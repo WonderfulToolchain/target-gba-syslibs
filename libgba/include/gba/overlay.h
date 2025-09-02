@@ -20,8 +20,8 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef __WF_LIBGBA_OVERLAY_H__
-#define __WF_LIBGBA_OVERLAY_H__
+#ifndef LIBGBA_OVERLAY_H_
+#define LIBGBA_OVERLAY_H_
 
 #include <aeabi.h>
 
@@ -79,4 +79,4 @@
  */
 #define gba_overlay_load_ewram(NAME) gba_overlay_load(ewram, NAME)
 
-#endif /* __WF_LIBGBA_OVERLAY_H__ */
+#endif /* LIBGBA_OVERLAY_H_ */

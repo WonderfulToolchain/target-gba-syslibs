@@ -25,10 +25,12 @@
 
 #include <wonderful.h>
 #include <gba/mmio.h>
+#include <gba/bios.h>
 
 #ifndef __ASSEMBLER__
 #include <aeabi.h>
 #include <agbabi.h>
+#include <gba/overlay.h>
 #endif
 
 #endif /* LIBGBA_GBA_H_ */
