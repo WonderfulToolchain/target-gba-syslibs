@@ -3,6 +3,7 @@
 // Copyright (c) 2023 Adrian "asie" Siekierka
 
 #include <stdio.h>
+#include "gba/bios.h"
 
 static int stdout_putc(char c, FILE *file)
 {

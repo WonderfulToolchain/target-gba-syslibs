@@ -132,43 +132,6 @@ int __agbabi_coro_resume(__agbabi_coro_t* coro) __attribute__((nonnull(1)));
  */
 void __agbabi_coro_yield(__agbabi_coro_t* coro, int value) __attribute__((nonnull(1)));
 
-/**
- * Multiboot parameters
- * All callbacks must return 0 to continue, or non-zero to cancel
- * @param header Pointer to 192 bytes of header data
- * @param begin Pointer to start of Multiboot ROM data
- * @param end Pointer to end of Multiboot ROM data
- * @param palette 8-bit index of Multiboot animation
- * @param clients_connected Callback with a mask of which clients are connected
- * @param clients_connected Callback with a mask of which clients are connected
- * @param palette_progress Mask of which clients are waiting to receive palette data
- * @param accept Callback to confirm sending Multiboot ROM
- */
-typedef struct {
-    const void* header;
-    const void* begin;
-    const void* end;
-    int palette;
-    int(*clients_connected)(int mask);
-    int(*header_progress)(int prog);
-    int(*palette_progress)(int mask);
-    int(*accept)(void);
-} __agbabi_multiboot_t;
-
-/**
- * Send Multiboot data over serial IO
- * IRQs must first be disabled
- * @param param Pointer to __agbabi_multiboot_t
- * @return 0 on success, 1 on failure with errno set to the error code
- */
-int __agbabi_multiboot(const __agbabi_multiboot_t* param) __attribute__((nonnull(1)));
-
-/**
- * Check EWRAM speed
- * @return 0 for slow WRAM (OXY, NTR), 1 for fast EWRAM (AGB, AGS)
- */
-int __agbabi_poll_ewram(void) __attribute__((const));
-
 #ifdef __cplusplus
 }
 #endif

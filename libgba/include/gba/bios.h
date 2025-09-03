@@ -68,12 +68,27 @@
 
 /**
  * @brief Soft reset the console.
+ *
+ * @param target 0x00 - ROM, 0x01 ~ 0xFF - RAM
  */
 __attribute__((always_inline, noreturn))
-static inline void gba_bios_soft_reset(void) {
+static inline void gba_bios_soft_reset(uint8_t target) {
+    *((volatile uint8_t*) 0x3007FFA) = target;
     asm volatile("swi %0 << ((1f - . == 4) * -16); 1:"
         : 
         : "i" (GBA_BIOS_SWI_SOFTRESET)
+        :);
+    __builtin_unreachable();
+}
+
+/**
+ * @brief Hard reset the console.
+ */
+__attribute__((always_inline, noreturn))
+static inline void gba_bios_hard_reset(void) {
+    asm volatile("swi %0 << ((1f - . == 4) * -16); 1:"
+        : 
+        : "i" (GBA_BIOS_SWI_HARDRESET)
         :);
     __builtin_unreachable();
 }
@@ -274,6 +289,15 @@ static inline uint32_t gba_bios_get_checksum(void) {
         : "i" (GBA_BIOS_SWI_GETBIOSCHECKSUM)
         : "r0", "r1", "r2", "r3", "memory");
     return r0;
+}
+
+__attribute__((always_inline))
+static inline void gba_bios_sound_set_bias(uint32_t bias) {
+    register uint32_t r0 asm("r0") = bias;
+    asm volatile("swi %0 << ((1f - . == 4) * -16); 1:"
+        : "+r" (r0)
+        : "i" (GBA_BIOS_SWI_SOUNDBIAS)
+        : "r0", "r1", "r2", "r3", "memory");
 }
 
 #endif
